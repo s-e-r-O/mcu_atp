@@ -1,8 +1,16 @@
-	MOV A, 1
-	MOV B, 2
+;Added declaration of variables !!
+x: 2
+y: 3
+cs: 123	
+; Also labels for crazy jumps
+start:
+	MOV A, x
+	
+	MOV B, y
 	ADD A,B
 	MOV C, 129
 	ADD B, C
 	ADD A, B
 	SUB A, 22
+	JMP start
 	HLT
