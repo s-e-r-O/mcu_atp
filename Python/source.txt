@@ -1,5 +1,5 @@
 ;Added declaration of variables !!
-x: 2
+x: 1
 y: 3
 cs: 123	
 ; Also labels for crazy jumps

@@ -17,63 +17,64 @@ variables = {}
 
 num_line = 0
 
+num_instruction = 0
+
+src = open('source.txt', 'r')
+raw = open('source.bin', 'wb')
+
 def recognizeAddress(address):
 	if reg_pattern.match(address):
 		value = config['reg'][address]
 		return 'reg',value
 	elif val_pattern.match(address):
-		try:
-			value = int(address)
-		except:
-			if (variables.get(address) != None):
-				value=variables[address]
-			else:
-				print('(' + str(num_line) + '): '+address+' doesn\'t exist')
-				close()
-
-		if value < 256:
-			return 'val',value
-		return 'na',0
+		value = getValue(address)
+		if (value == None):
+			return 'na',0
+		return 'val', value
 	elif areg_pattern.match(address):
 		value = config['reg'][address[1]]
 		return 'areg',value
 	elif aval_pattern.match(address):
-		try:
-			value = int(address[1:].partition(']')[0])
-		except:
-			if (variables.get(address[1:].partition(']')[0]) != None):
-				value=variables[address[1:].partition(']')[0]]
-			else:
-				print('(' + str(num_line) + '): '+address[1:].partition(']')[0]+' doesn\'t exist')
-				close()
-				
-		if value < 256:
-			return 'aval',value
-		return 'na',0
+		value = getValue(address[1:].partition(']')[0])
+		if (value == None):	
+			return 'na',0
+		return 'aval',value
 	return 'na',0
 
+def getValue(address):
+	try:
+		value = int(address)
+	except:
+		if (variables.get(address) != None):
+			value=variables[address]
+		else:
+			print('(' + str(num_line) + '): '+address+' doesn\'t exist')
+			close()
 
-src = open('source.txt', 'r')
-raw = open('bin.bin', 'wb')
+	if value < 256:
+		return value
+	return None
 
 def close():
 	src.close()
 	raw.close()
 	sys.exit()
 
-num_instruction = 0
-
 for line in src:
 
 	num_line+= 1
+
 	# Check for labels
 	if label_pattern.match(line):
 		if (re.match(r'^(\s)*[0-9]+',line.partition(':')[2])):
+			# If label value is numeric
 			variables[list(filter(None,separator_pattern.split(line.partition(':')[0])))[0].upper()] = int(list(filter(None,separator_pattern.split(line.partition(':')[2])))[0])
 			continue
+		# If label value is an instruction
 		variables[list(filter(None,separator_pattern.split(line.partition(':')[0])))[0].upper()] = num_instruction
 		line = line.partition(':')[2]
 	else:
+		# Can't have numeric labels or a register value as a label
 		if (re.match(r'(\s)*([A-H|a-h]|[0-9]+)(\s)*:', line)):
 			print('(' + str(num_line) + '): Label not supported')
 			close()
