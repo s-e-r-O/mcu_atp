@@ -54,6 +54,8 @@ type arr_of_arr is array(7 downto 0) of STD_LOGIC_VECTOR(DATA_SIZE - 1 downto 0)
 signal REGISTERS : arr_of_arr := (others => ( others => '0'));
 
 signal state : integer := 0;
+signal carry : STD_LOGIC := '0';
+signal zero : STD_LOGIC := '0';
 
 begin
 
@@ -274,25 +276,42 @@ begin
 					
 					
 				elsif (IR(INSTR_SIZE - 4 downto INSTR_SIZE - ADDR_SIZE) = "01000" ) then --PRNT
-					state <= 0; --PRNT
+					state <= 0; 
 				elsif (IR(INSTR_SIZE - 4 downto INSTR_SIZE - ADDR_SIZE) = "01001" ) then --CMP
 					if (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "000") then
-						
+						if (REGISTERS(to_integer(unsigned(IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE)))) = REGISTERS(to_integer(unsigned(IR(ADDR_SIZE-1 downto 0))))) then
+							zero <= '1';
+						else
+							zero <= '0';
+							if (to_integer(unsigned(REGISTERS(to_integer(unsigned(IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE)))))) > to_integer(unsigned(REGISTERS(to_integer(unsigned(IR(ADDR_SIZE-1 downto 0))))))) then
+								carry <= '1';
+							else
+								carry <= '0';
+							end if;
+						end if;
+						state <= 0;
 					elsif (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "001") then
-						
+						MAR <= IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE);
+						READ_RAM <= '1';
+						cur_state := 15;
+						state <= 1;
 					elsif (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "010") then
-						
+						MAR <= REGISTERS(to_integer(unsigned(IR(ADDR_SIZE-1 downto 0))));
+						READ_RAM <= '1';
+						cur_state := 15;
+						state <= 1;
 					elsif (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "011") then
-						
-					elsif (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "100") then
-						
-					elsif (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "101") then
-						
-					elsif (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "110") then
-						
-					elsif (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "111") then
-						
-					
+						if (REGISTERS(to_integer(unsigned(IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE)))) = IR(ADDR_SIZE-1 downto 0)) then
+							zero <= '1';
+						else
+							zero <= '0';
+							if (to_integer(unsigned(REGISTERS(to_integer(unsigned(IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE)))))) > to_integer(unsigned(IR(ADDR_SIZE-1 downto 0)))) then
+								carry <= '1';
+							else
+								carry <= '0';
+							end if;
+						end if;
+						state <= 0;
 					end if;
 				end if;
 			
@@ -324,10 +343,20 @@ begin
 			when 14 =>				--JMP
 				PC<=MBR;
 				state <= 0;
-				
-			when others  =>
-				MBR <= AC;
+			when 15 =>				--CMP
+				if (REGISTERS(to_integer(unsigned(IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE)))) = MBR) then
+					zero <= '1';
+				else
+					zero <= '0';
+					if (to_integer(unsigned(REGISTERS(to_integer(unsigned(IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE)))))) > to_integer(unsigned(MBR))) then
+						carry <= '1';
+					else
+						carry <= '0';
+					end if;
+				end if;
 				state <= 0;
+			when others  =>
+				state <= 8;
 			
 		end case;
 	end if;
