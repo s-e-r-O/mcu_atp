@@ -41,6 +41,14 @@
 *_summary.xml
 *_usage.xml
 *_xst.xrpt
+*fuse.log
+*fuse.xmsgs
+*fuseRelaunch.cmd
+*isim.cmd
+*isim.log
+*_isim_beh.exe
+*_isim_beh.wdb
+*xilinxsim.ini
 
 # iMPACT generated files
 _impactbatch.log
@@ -63,5 +71,6 @@ webtalk_pn.xml
 iseconfig/
 xlnx_auto_0_xdb/
 xst/
+isim/
 _ngo/
 _xmsgs/
