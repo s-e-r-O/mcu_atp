@@ -36,8 +36,7 @@ entity CPU is
 		WRITE_RAM : out STD_LOGIC;
 		DATA : in STD_LOGIC_VECTOR(7 downto 0);
 		DATA_OUT : out STD_LOGIC_VECTOR(7 downto 0);
-		CLK : in STD_LOGIC;
-		REGISTER_A : out STD_LOGIC_VECTOR (7 downto 0)
+		CLK : in STD_LOGIC
 	);
 end CPU;
 
@@ -60,14 +59,11 @@ begin
 
 ADDRESS <= MAR;
 DATA_OUT <= MBR;
-REGISTER_A <= REGISTERS(0);
 
 process (clk, DATA) 
 variable pc_int : integer;
 variable instr_offset : integer := 0;
 variable instr_length : integer := 0;
-variable aux_int_1 : integer := 0;
-variable aux_int_2 : integer := 0;
 variable cur_state : integer := 0;
 begin
 	
@@ -82,7 +78,7 @@ begin
 				state <= 2;
 			when 2 => 
 				MBR <= DATA;
-				READ_RAM <= '1';
+				READ_RAM <= '0';
 				state <= cur_state;
 			
 			when 3 => 
