@@ -1,0 +1,8 @@
+	MOV A, 1
+	MOV B, 2
+	ADD A,B
+	MOV C, 129
+	ADD B, C
+	ADD A, B
+	SUB A, 22
+	HLT

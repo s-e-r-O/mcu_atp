@@ -1,0 +1,219 @@
+{
+	"reg":{
+		"A": 0,
+		"B": 1,
+		"C": 2,
+		"D": 3,
+		"E": 4,
+		"F": 5,
+		"G": 6,
+		"H": 7
+	},
+
+	"commands":[
+	{
+		"id": "HLT",
+		"length": 1,
+		"value": 0
+	},
+	{
+		"id": "MOV",
+		"length": 3,
+		"value": 1,
+		"dir":{
+			"reg-reg": 0,
+			"reg-aval": 1,
+			"reg-areg": 2,
+			"reg-val":3,
+			"areg-reg":4,
+			"aval-reg":5,
+			"aval-val":6,
+			"areg-val":7
+		}
+	},
+	{
+		"id": "ADD",
+		"length": 3,
+		"value": 2,
+		"dir":{
+			"reg-reg": 0,
+			"reg-aval": 1,
+			"reg-areg": 2,
+			"reg-val":3
+		}
+	},
+	{
+		"id": "SUB",
+		"length": 3,
+		"value": 3,
+		"dir":{
+			"reg-reg": 0,
+			"reg-aval": 1,
+			"reg-areg": 2,
+			"reg-val":3
+		}
+	},
+	{
+		"id": "AND",
+		"length": 3,
+		"value": 4,
+		"dir":{
+			"reg-reg": 0,
+			"reg-aval": 1,
+			"reg-areg": 2,
+			"reg-val":3
+		}
+	},
+	{
+		"id": "OR",
+		"length": 3,
+		"value": 5,
+		"dir":{
+			"reg-reg": 0,
+			"reg-aval": 1,
+			"reg-areg": 2,
+			"reg-val":3
+		}
+	},
+	{
+		"id": "NOT",
+		"length": 2,
+		"value": 6,
+		"dir":{
+			"reg": 0
+		}
+	},
+	{
+		"id": "JMP",
+		"length": 2,
+		"value": 7,
+		"dir":{
+			"reg": 0,
+			"aval": 1,
+			"areg": 2,
+			"val":3
+		}
+	},
+	{
+		"id": "PRINT",
+		"length": 2,
+		"value": 8,
+		"dir":{
+			"reg": 0,
+			"aval": 1,
+			"areg": 2,
+			"val":3
+		}
+	},
+	{
+		"id": "CMP",
+		"length": 3,
+		"value": 9,
+		"dir":{
+			"reg-reg": 0,
+			"reg-aval": 1,
+			"reg-areg": 2,
+			"reg-val":3
+		}
+	},
+	{
+		"id": "MUL",
+		"length": 3,
+		"value": 10,
+		"dir":{
+			"reg-reg": 0,
+			"reg-aval": 1,
+			"reg-areg": 2,
+			"reg-val":3
+		}
+	},
+	{
+		"id": "DIV",
+		"length": 3,
+		"value": 11,
+		"dir":{
+			"reg-reg": 0,
+			"reg-aval": 1,
+			"reg-areg": 2,
+			"reg-val":3
+		}
+	},
+	{
+		"id": "XOR",
+		"length": 3,
+		"value": 12,
+		"dir":{
+			"reg-reg": 0,
+			"reg-aval": 1,
+			"reg-areg": 2,
+			"reg-val":3
+		}
+	},
+	{
+		"id": "JZ",
+		"length": 2,
+		"value": 13,
+		"dir":{
+			"reg": 0,
+			"aval": 1,
+			"areg": 2,
+			"val":3
+		}
+	},
+	{
+		"id": "JNZ",
+		"length": 2,
+		"value": 14,
+		"dir":{
+			"reg": 0,
+			"aval": 1,
+			"areg": 2,
+			"val":3
+		}
+	},
+	{
+		"id": "JA",
+		"length": 2,
+		"value": 15,
+		"dir":{
+			"reg": 0,
+			"aval": 1,
+			"areg": 2,
+			"val":3
+		}
+	},
+	{
+		"id": "JAE",
+		"length": 2,
+		"value": 16,
+		"dir":{
+			"reg": 0,
+			"aval": 1,
+			"areg": 2,
+			"val":3
+		}
+	},
+	{
+		"id": "JB",
+		"length": 2,
+		"value": 17,
+		"dir":{
+			"reg": 0,
+			"aval": 1,
+			"areg": 2,
+			"val":3
+		}
+	},
+	{
+		"id": "JBE",
+		"length": 2,
+		"value": 18,
+		"dir":{
+			"reg": 0,
+			"aval": 1,
+			"areg": 2,
+			"val":3
+		}
+	}
+	]
+}
