@@ -4,7 +4,5 @@ y: 3
 cs: 123	
 ; Also labels for crazy jumps
 start:
-	MOV A, y
-	MOV [200], 248
-	MOV A, [200]
+	PRINT cs
 	HLT

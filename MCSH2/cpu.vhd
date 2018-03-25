@@ -38,6 +38,9 @@ entity CPU is
 		DATA_OUT : out STD_LOGIC_VECTOR(7 downto 0);
 		CLK : in STD_LOGIC;
 		RESET : in STD_LOGIC;
+		E: inout std_logic;
+		RS,RW,SF_CE0 : out std_logic;
+		DB : out std_logic_vector(3 downto 0);
 		REGISTER_A : out STD_LOGIC_VECTOR(7 downto 0)
 	);
 end CPU;
@@ -58,13 +61,20 @@ signal REGISTERS : arr_of_arr := (others => ( others => '0'));
 signal state : integer := 0;
 signal carry : STD_LOGIC := '0';
 signal zero : STD_LOGIC := '0';
+signal print_init : STD_LOGIC := '0';
+signal print_done : STD_LOGIC := '0';
+
+type print_states is (HOLD,FI1A,FI1B,FI2A,FI2B,FI3A,FI3B,BOR1,BOR2,CONT1,CONT2,
+	                 MOD1,MOD2,e1,e2, ret1, ret2);
+signal print_state : print_states;
 
 begin
 
 ADDRESS <= MAR;
 DATA_OUT <= MBR;
-REGISTER_A <= REGISTERS(0);
-
+REGISTER_A(7) <= print_init;
+REGISTER_A(0) <= print_done;
+SF_CE0 <='1';
 process (clk, DATA) 
 variable pc_int : integer;
 variable instr_offset : integer := 0;
@@ -81,6 +91,7 @@ begin
 		instr_offset := 0;
 		instr_length := 0;
 		cur_state := 0;
+		print_init <= '0';
 	elsif (clk'event and clk='1') then
 		case state is 
 			when 0 =>
@@ -287,8 +298,25 @@ begin
 					end if;
 					
 					
-				elsif (IR(INSTR_SIZE - 4 downto INSTR_SIZE - ADDR_SIZE) = "01000" ) then --PRNT
-					state <= 0; 
+				elsif (IR(INSTR_SIZE - 4 downto INSTR_SIZE - ADDR_SIZE) = "01000" ) then --PRINT
+					print_init <= '1';
+					if (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "000") then
+							MBR<=REGISTERS(to_integer(unsigned(IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE))));
+							state <= 16;
+					elsif (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "001") then
+							MAR <= IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE);
+							READ_RAM <= '1';
+							cur_state := 16;
+							state <= 1;
+					elsif (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "010") then
+							MAR <= REGISTERS(to_integer(unsigned(IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE))));
+							READ_RAM <= '1';
+							cur_state := 14;
+							state <= 16;
+					elsif (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "011") then
+							MBR<=IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE);
+							state <= 16;
+					end if;
 				elsif (IR(INSTR_SIZE - 4 downto INSTR_SIZE - ADDR_SIZE) = "01001" ) then --CMP
 					if (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "000") then
 						if (REGISTERS(to_integer(unsigned(IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE)))) = REGISTERS(to_integer(unsigned(IR(ADDR_SIZE-1 downto 0))))) then
@@ -364,11 +392,154 @@ begin
 					end if;
 				end if;
 				state <= 0;
+			when 16 =>
+				if (print_done = '1') then
+					print_init <= '0';
+					state <= 0;
+				else
+					state <= 16;
+				end if;
 			when others  =>
 				state <= 8;
 			
 		end case;
 	end if;
+end process;
+
+reloj: process (clk)   -- DIVISOR DE FRECUENCIA DE 50 MHz a 500 Hz
+		       variable cuenta:integer range 0 to 100000:=0;
+               begin
+             		if(clk'event and clk='1') then
+						  if (cuenta < 100000) then
+                      cuenta:=cuenta + 1;
+						  else
+							 cuenta := 0;
+						  end if;	 
+							if (cuenta < 50000) then
+							 E <= '0';
+							else
+							 E <= '1';
+							end if;	
+						end if;
+				 end process reloj;
+process (E, reset)
+	variable cur_digit : integer;
+	variable num_digits : integer;
+	variable num : integer;
+	
+begin
+	if (reset = '1') then
+		print_state <= HOLD;
+		print_done <= '0';
+	elsif (E'event and E='1') then
+		case print_state is
+				when HOLD =>
+					if (print_init = '1') then
+						print_done <= '0';
+						print_state <= FI1A;
+					else
+						print_state <= HOLD;
+					end if;
+			  when FI1A =>      ----- INICIO código $28 SELECCION DEL BUS DE 4 BITS 
+					RS <='0'; RW<='0';
+					DB <="0010";
+					print_state <= FI1B;
+			  when FI1B =>
+					RS <='0'; RW<='0';
+					DB <="1000";
+					print_state <= FI2A;
+			  when FI2A =>
+					RS <='0'; RW<='0';
+					DB <="0010";
+					print_state <= FI2B;
+			  when FI2B =>
+					RS <='0'; RW<='0';
+					DB <="1000";
+					print_state <= FI3A;
+			  when FI3A =>
+					RS <='0'; RW<='0';
+					DB <="0010";
+					print_state <= FI3B;
+			  when FI3B =>
+					RS <='0'; RW<='0';
+					DB <="1000";       ----- FIN código $28 SELECCIÓM DEL BUS DE 4 BITS
+					print_state <= BOR1;
+				when BOR1 =>       ----- INICIO código $01 BORRA LA PANTALLA Y CURSOR A CASA
+					RS <='0'; RW<='0';
+					DB <="0000";
+					print_state <= BOR2;
+				when BOR2 =>
+					RS <='0'; RW<='0';
+					DB <="0001";       ----- FIN código $01 BORRA LA PANTALLA Y CURSOR A CASA 
+					print_state <= CONT1;
+				when CONT1 =>      ----- INICIO código $0C ACTIVA LA PANTALLA
+					RS <='0'; RW<='0';
+					DB <="0000";
+					print_state <= CONT2;
+				when CONT2 =>
+					RS <='0'; RW<='0';
+					DB <="1100";       ----- FIN código $0C ACTIVA LA PANTALLA
+					print_state <= MOD1;
+				when MOD1 =>       ----- INICIO código $06 INCREMENTA CURSOR EN LA PANTALLA 
+					RS <='0'; RW<='0';
+					DB <="0000";
+					print_state <= MOD2;
+				when MOD2 =>
+					RS <='0'; RW<='0';
+					DB <="0110";       ----- FIN código $06 INCREMENTA CURSOR EN LA PANTALLA 
+					num := to_integer(unsigned(MBR));
+					if (num >= 100) then
+						num_digits := 3;
+					elsif (num >= 10) then
+						num_digits := 2;
+					else
+						num_digits := 1;
+					end if;
+					print_state <=e1;
+				when e1 =>         
+					RS <='1'; RW<='0';
+					DB <="0011";
+					case num_digits is
+						when 3 =>
+							for I in 2 downto 1 loop
+								if (num > 100*I)then
+									cur_digit := I;
+									num := num - cur_digit * 100;
+									exit;
+								end if; 
+							end loop;
+						when 2 =>
+							for I in 9 downto 0 loop
+								if (num > 10*I)then
+									cur_digit := I;
+									num := num - cur_digit * 10;
+									exit;
+								end if; 
+							end loop;
+						when others =>
+							cur_digit := num;
+					end case;
+					print_state <= e2;
+				when e2 =>
+					RS <='1'; RW<='0';
+					DB <=std_logic_vector(to_unsigned(cur_digit,4));
+					num_digits := num_digits - 1;
+					if (num_digits > 0) then
+						print_state <= e1;
+					else
+						print_state <= ret1; 
+					end if;
+				when ret1 =>        ----- INICIO código $80 RETORNO
+					RS <='0'; RW<='0';
+					DB <="1000";
+					print_state <= ret2;
+				when ret2 =>
+					RS <='0'; RW<='0';
+					DB <="0000";
+					print_done <= '0';
+					print_state <= HOLD; ----- FIN código $80 RETORNO
+			end case;
+		end if;
 end process;
 
 end Behavioral;

@@ -33,6 +33,9 @@ entity main is
 	Port (
 		CLK : in STD_LOGIC;
 		RESET : in STD_LOGIC;
+		E: inout std_logic;
+		RS,RW,SF_CE0 : out std_logic;
+		DB : out std_logic_vector(3 downto 0);
 		REGISTER_A : out STD_LOGIC_VECTOR(7 downto 0)
 	);
 end main;
@@ -48,6 +51,9 @@ component CPU is
 		DATA_OUT : out STD_LOGIC_VECTOR(7 downto 0);
 		CLK : in STD_LOGIC;
 		RESET : in STD_LOGIC;
+		E: inout std_logic;
+		RS,RW,SF_CE0 : out std_logic;
+		DB : out std_logic_vector(3 downto 0);
 		REGISTER_A : out STD_LOGIC_VECTOR(7 downto 0)
 		
 	);
@@ -70,7 +76,7 @@ signal read_ram : STD_LOGIC;
 signal write_ram : STD_LOGIC;
 
 begin
-u1: CPU port map (mem_bus, read_ram, write_ram, data_bus_out_ram, data_bus_in_ram, CLK, RESET, REGISTER_A);
+u1: CPU port map (mem_bus, read_ram, write_ram, data_bus_out_ram, data_bus_in_ram, CLK, RESET, E, RS, RW, SF_CE0, DB, REGISTER_A);
 u2: ram port map (mem_bus, data_bus_in_ram, read_ram, write_ram, CLK, data_bus_out_ram);
 
 end Behavioral;

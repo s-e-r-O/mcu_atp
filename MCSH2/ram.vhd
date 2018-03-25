@@ -44,16 +44,9 @@ architecture Behavioral of ram is
 type arr_of_arr is array(0 to 255) of STD_LOGIC_VECTOR(7 downto 0);
 
 signal registers : arr_of_arr := (
-		0 => X"61",
-		1 => X"00",
-		2 => X"03",
-		3 => X"C1",
-		4 => X"C8",
-		5 => X"F8",
-		6 => X"21",
-		7 => X"00",
-		8 => X"C8",
-		9 => X"00",
+		0 => X"68",
+		1 => X"7B",
+		2 => X"00",		
 		others => ( others => '0'));
 begin
   process(CLK) 
