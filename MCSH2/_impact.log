@@ -1,12 +1,21 @@
 iMPACT Version: 14.7
 
-iMPACT log file Started on Thu Mar 22 20:52:04 2018
+iMPACT log file Started on Sun Mar 25 14:06:31 2018
 
 Welcome to iMPACT
 iMPACT Version: 14.7
-Project: 'D:\Upb\Electronica Digital\TrabajosAula\Labo1\\auto_project.ipf'already exists.
-Original project has been renamed to 'D:\Upb\ElectronicaDigital\TrabajosAula\Labo1\\auto_project_1.ipf'.
-Project: D:\Upb\Electronica Digital\TrabajosAula\Labo1\\auto_project.ipfcreated.
+The setting has been saved, to change the settings, please go toEdit->Preferences.// *** BATCH CMD : setPreference -pref StartupClock:AUTO_CORRECTION
+// *** BATCH CMD : setPreference -pref AutoSignature:FALSE
+// *** BATCH CMD : setPreference -pref KeepSVF:FALSE
+// *** BATCH CMD : setPreference -pref ConcurrentMode:FALSE
+// *** BATCH CMD : setPreference -pref UseHighz:FALSE
+// *** BATCH CMD : setPreference -pref svfUseTime:FALSE
+// *** BATCH CMD : setPreference -pref SpiByteSwap:AUTO_CORRECTION
+// *** BATCH CMD : setPreference -pref AutoInfer:TRUE
+// *** BATCH CMD : setPreference -pref SvfPlayDisplayComments:FALSE
+Project: 'C:\Users\i3\Google Drive\UPB\6_Sexto Semestre\ElectronicaDigital\XilinxProjects\labo1\\auto_project.ipf' already exists.
+Original project has been renamed to 'C:\Users\i3\Google Drive\UPB\6_SextoSemestre\Electronica Digital\XilinxProjects\labo1\\auto_project_1.ipf'.
+Project: C:\Users\i3\Google Drive\UPB\6_Sexto Semestre\ElectronicaDigital\XilinxProjects\labo1\\auto_project.ipf created.
 // *** BATCH CMD : setMode -bs
 GUI --- Auto connect to cable...
 // *** BATCH CMD : setCable -port auto
@@ -17,6 +26,8 @@ AutoDetecting cable. Please wait.
 PROGRESS_START - Starting Operation.
 Connecting to cable (Usb Port - USB21).
 Checking cable driver.
+ Driver file xusb22.sys found.
+ File C:/Xilinx/14.7/ISE_DS/ISE/bin/nt64/xusb22.sys not found.
  Driver file xusb_emb.sys found.
  Driver version: src=1029, dest=1029.
  Driver windrvr6.sys version = 10.2.1.0. WinDriver v10.21 Jungo (c) 1997 - 2010 Build Date: Aug 31 2010 x86_64 64bit SYS14:14:44, version = 1021.
@@ -36,7 +47,7 @@ Elapsed time =      1 sec.
 Type = 0x0004.
  ESN device is not available for this cable.
 Attempting to identify devices in the boundary-scan chain configuration...
-INFO:iMPACT - Current time: 22/3/2018 20:52:10
+INFO:iMPACT - Current time: 25/03/2018 14:06:37
 // *** BATCH CMD : Identify -inferir 
 PROGRESS_START - Starting Operation.
 Identifying chain contents...'0': : Manufacturer's ID = Xilinx xc2c64a, Version : 0
@@ -58,8 +69,17 @@ done.
 PROGRESS_END - End Operation.
 Elapsed time =      0 sec.
 // *** BATCH CMD : identifyMPM 
-// *** BATCH CMD : assignFile -p 1 -file "D:/Upb/ATP/ProyectoFinal2/MCSH2/main.bit"
-'1': Loading file 'D:/Upb/ATP/Proyecto Final2/MCSH2/main.bit' ...
+The setting has been saved, to change the settings, please go toEdit->Preferences.// *** BATCH CMD : setPreference -pref StartupClock:AUTO_CORRECTION
+// *** BATCH CMD : setPreference -pref AutoSignature:FALSE
+// *** BATCH CMD : setPreference -pref KeepSVF:FALSE
+// *** BATCH CMD : setPreference -pref ConcurrentMode:FALSE
+// *** BATCH CMD : setPreference -pref UseHighz:FALSE
+// *** BATCH CMD : setPreference -pref svfUseTime:FALSE
+// *** BATCH CMD : setPreference -pref SpiByteSwap:AUTO_CORRECTION
+// *** BATCH CMD : setPreference -pref AutoInfer:TRUE
+// *** BATCH CMD : setPreference -pref SvfPlayDisplayComments:FALSE
+// *** BATCH CMD : assignFile -p 1 -file "C:/Users/i3/Google Drive/UPB/7_SeptimoSemestre/mcu_atp/MCSH2/main.bit"
+'1': Loading file 'C:/Users/i3/Google Drive/UPB/7_SeptimoSemestre/mcu_atp/MCSH2/main.bit' ...
 done.
 INFO:iMPACT:2257 - Startup Clock has been changed to 'JtagClk' in the bitstream   stored in memory,
    but the original bitstream file remains unchanged.
@@ -67,7 +87,19 @@ UserID read from the bitstream file = 0xFFFFFFFF.
 ----------------------------------------------------------------------
 INFO:iMPACT:501 - '1': Added Device xc3s500e successfully.
 ----------------------------------------------------------------------
-INFO:iMPACT - Current time: 22/3/2018 20:52:28
+INFO:iMPACT - Current time: 25/03/2018 14:06:58
+// *** BATCH CMD : BlankCheck -p 2 
+Maximum TCK operating frequency for this device chain: 10000000.
+Validating chain...
+Boundary-scan chain validated successfully.
+'2': Putting device in ISP mode...done.
+'2': Putting device in ISP mode...PROGRESS_START - Starting Operation.
+done.
+'2': Performing blank check on device...done.
+'2': Part is blank.
+PROGRESS_END - End Operation.
+Elapsed time =      4 sec.
+INFO:iMPACT - Current time: 25/03/2018 14:07:04
 // *** BATCH CMD : BlankCheck -p 3 
 Maximum TCK operating frequency for this device chain: 10000000.
 Validating chain...
@@ -78,7 +110,165 @@ done.
 '3': Blank-check successful. Device is blank.
 PROGRESS_END - End Operation.
 Elapsed time =      0 sec.
-INFO:iMPACT - Current time: 22/3/2018 20:52:31
+INFO:iMPACT - Current time: 25/03/2018 14:07:06
+// *** BATCH CMD : Program -p 1 
+Maximum TCK operating frequency for this device chain: 10000000.
+Validating chain...
+Boundary-scan chain validated successfully.
+'1': Programming device...
+PROGRESS_START - Starting Operation.
+ LCK_cycle = NoWait.
+LCK cycle: NoWait
+done.
+INFO:iMPACT:2219 - Status register values:
+INFO:iMPACT - 0011 0111 0001 1000 0000 0000 0000 0000 
+INFO:iMPACT:579 - '1': Completed downloading bit file to device.
+INFO:iMPACT:188 - '1': Programming completed successfully.
+ LCK_cycle = NoWait.
+LCK cycle: NoWait
+INFO:iMPACT - '1': Checking done pin....done.
+'1': Programmed successfully.
+PROGRESS_END - End Operation.
+Elapsed time =      0 sec.
+INFO:iMPACT - Current time: 25/03/2018 14:13:53
+// *** BATCH CMD : BlankCheck -p 2 
+Maximum TCK operating frequency for this device chain: 10000000.
+Validating chain...
+Boundary-scan chain validated successfully.
+'2': Putting device in ISP mode...done.
+'2': Putting device in ISP mode...PROGRESS_START - Starting Operation.
+done.
+'2': Performing blank check on device...done.
+'2': Part is blank.
+PROGRESS_END - End Operation.
+Elapsed time =      4 sec.
+INFO:iMPACT - Current time: 25/03/2018 14:13:58
+// *** BATCH CMD : BlankCheck -p 3 
+Maximum TCK operating frequency for this device chain: 10000000.
+Validating chain...
+Boundary-scan chain validated successfully.
+'3': Performing blank-check on device...PROGRESS_START - Starting Operation.
+done.
+'3': Part is  Blank.
+'3': Blank-check successful. Device is blank.
+PROGRESS_END - End Operation.
+Elapsed time =      1 sec.
+INFO:iMPACT - Current time: 25/03/2018 14:14:00
+Updating config file C:/Users/i3/Google Drive/UPB/7_SeptimoSemestre/mcu_atp/MCSH2/main.bit...
+INFO:iMPACT:2257 - Startup Clock has been changed to 'JtagClk' in the bitstream   stored in memory,
+   but the original bitstream file remains unchanged.
+// *** BATCH CMD : Program -p 1 
+Maximum TCK operating frequency for this device chain: 10000000.
+Validating chain...
+Boundary-scan chain validated successfully.
+'1': Programming device...
+PROGRESS_START - Starting Operation.
+ LCK_cycle = NoWait.
+LCK cycle: NoWait
+done.
+INFO:iMPACT:2219 - Status register values:
+INFO:iMPACT - 0011 0111 0001 1000 0000 0000 0000 0000 
+INFO:iMPACT:579 - '1': Completed downloading bit file to device.
+INFO:iMPACT:188 - '1': Programming completed successfully.
+ LCK_cycle = NoWait.
+LCK cycle: NoWait
+INFO:iMPACT - '1': Checking done pin....done.
+'1': Programmed successfully.
+PROGRESS_END - End Operation.
+Elapsed time =      1 sec.
+INFO:iMPACT - Current time: 25/03/2018 14:20:18
+// *** BATCH CMD : BlankCheck -p 2 
+Maximum TCK operating frequency for this device chain: 10000000.
+Validating chain...
+Boundary-scan chain validated successfully.
+'2': Putting device in ISP mode...done.
+'2': Putting device in ISP mode...PROGRESS_START - Starting Operation.
+done.
+'2': Performing blank check on device...done.
+'2': Part is blank.
+PROGRESS_END - End Operation.
+Elapsed time =      4 sec.
+INFO:iMPACT - Current time: 25/03/2018 14:20:24
+// *** BATCH CMD : BlankCheck -p 3 
+Maximum TCK operating frequency for this device chain: 10000000.
+Validating chain...
+Boundary-scan chain validated successfully.
+'3': Performing blank-check on device...PROGRESS_START - Starting Operation.
+done.
+'3': Part is  Blank.
+'3': Blank-check successful. Device is blank.
+PROGRESS_END - End Operation.
+Elapsed time =      0 sec.
+INFO:iMPACT - Current time: 25/03/2018 14:20:25
+Updating config file C:/Users/i3/Google Drive/UPB/7_SeptimoSemestre/mcu_atp/MCSH2/main.bit...
+INFO:iMPACT:2257 - Startup Clock has been changed to 'JtagClk' in the bitstream   stored in memory,
+   but the original bitstream file remains unchanged.
+// *** BATCH CMD : Program -p 1 
+Maximum TCK operating frequency for this device chain: 10000000.
+Validating chain...
+Boundary-scan chain validated successfully.
+'1': Programming device...
+PROGRESS_START - Starting Operation.
+ LCK_cycle = NoWait.
+LCK cycle: NoWait
+done.
+INFO:iMPACT:2219 - Status register values:
+INFO:iMPACT - 0011 0111 0001 1000 0000 0000 0000 0000 
+INFO:iMPACT:579 - '1': Completed downloading bit file to device.
+INFO:iMPACT:188 - '1': Programming completed successfully.
+ LCK_cycle = NoWait.
+LCK cycle: NoWait
+INFO:iMPACT - '1': Checking done pin....done.
+'1': Programmed successfully.
+PROGRESS_END - End Operation.
+Elapsed time =      1 sec.
+INFO:iMPACT - Current time: 25/03/2018 14:25:58
+// *** BATCH CMD : BlankCheck -p 2 
+Maximum TCK operating frequency for this device chain: 10000000.
+Validating chain...
+Boundary-scan chain validated successfully.
+'2': Putting device in ISP mode...done.
+'2': Putting device in ISP mode...PROGRESS_START - Starting Operation.
+done.
+'2': Performing blank check on device...done.
+'2': Part is blank.
+PROGRESS_END - End Operation.
+Elapsed time =      4 sec.
+INFO:iMPACT - Current time: 25/03/2018 14:26:03
+// *** BATCH CMD : BlankCheck -p 3 
+Maximum TCK operating frequency for this device chain: 10000000.
+Validating chain...
+Boundary-scan chain validated successfully.
+'3': Performing blank-check on device...PROGRESS_START - Starting Operation.
+done.
+'3': Part is  Blank.
+'3': Blank-check successful. Device is blank.
+PROGRESS_END - End Operation.
+Elapsed time =      1 sec.
+INFO:iMPACT - Current time: 25/03/2018 14:26:05
+Updating config file C:/Users/i3/Google Drive/UPB/7_SeptimoSemestre/mcu_atp/MCSH2/main.bit...
+INFO:iMPACT:2257 - Startup Clock has been changed to 'JtagClk' in the bitstream   stored in memory,
+   but the original bitstream file remains unchanged.
+// *** BATCH CMD : Program -p 1 
+Maximum TCK operating frequency for this device chain: 10000000.
+Validating chain...
+Boundary-scan chain validated successfully.
+'1': Programming device...
+PROGRESS_START - Starting Operation.
+ LCK_cycle = NoWait.
+LCK cycle: NoWait
+done.
+INFO:iMPACT:2219 - Status register values:
+INFO:iMPACT - 0011 0111 0001 1000 0000 0000 0000 0000 
+INFO:iMPACT:579 - '1': Completed downloading bit file to device.
+INFO:iMPACT:188 - '1': Programming completed successfully.
+ LCK_cycle = NoWait.
+LCK cycle: NoWait
+INFO:iMPACT - '1': Checking done pin....done.
+'1': Programmed successfully.
+PROGRESS_END - End Operation.
+Elapsed time =      1 sec.
+INFO:iMPACT - Current time: 25/03/2018 14:34:49
 // *** BATCH CMD : BlankCheck -p 2 
 Maximum TCK operating frequency for this device chain: 10000000.
 Validating chain...
@@ -90,28 +280,19 @@ done.
 '2': Part is blank.
 PROGRESS_END - End Operation.
 Elapsed time =      5 sec.
-INFO:iMPACT - Current time: 22/3/2018 20:52:40
-// *** BATCH CMD : Program -p 1 
+INFO:iMPACT - Current time: 25/03/2018 14:34:55
+// *** BATCH CMD : BlankCheck -p 3 
 Maximum TCK operating frequency for this device chain: 10000000.
 Validating chain...
 Boundary-scan chain validated successfully.
-'1': Programming device...
-PROGRESS_START - Starting Operation.
- LCK_cycle = NoWait.
-LCK cycle: NoWait
+'3': Performing blank-check on device...PROGRESS_START - Starting Operation.
 done.
-INFO:iMPACT:2219 - Status register values:
-INFO:iMPACT - 0011 0111 1011 1000 0000 0000 0000 0000 
-INFO:iMPACT:579 - '1': Completed downloading bit file to device.
-INFO:iMPACT:188 - '1': Programming completed successfully.
- LCK_cycle = NoWait.
-LCK cycle: NoWait
-INFO:iMPACT - '1': Checking done pin....done.
-'1': Programmed successfully.
+'3': Part is  Blank.
+'3': Blank-check successful. Device is blank.
 PROGRESS_END - End Operation.
 Elapsed time =      1 sec.
-INFO:iMPACT - Current time: 22/3/2018 20:58:14
-Updating config file D:/Upb/ATP/Proyecto Final2/MCSH2/main.bit...
+INFO:iMPACT - Current time: 25/03/2018 14:34:59
+Updating config file C:/Users/i3/Google Drive/UPB/7_SeptimoSemestre/mcu_atp/MCSH2/main.bit...
 INFO:iMPACT:2257 - Startup Clock has been changed to 'JtagClk' in the bitstream   stored in memory,
    but the original bitstream file remains unchanged.
 // *** BATCH CMD : Program -p 1 
@@ -124,7 +305,7 @@ PROGRESS_START - Starting Operation.
 LCK cycle: NoWait
 done.
 INFO:iMPACT:2219 - Status register values:
-INFO:iMPACT - 0011 0111 1011 1000 0000 0000 0000 0000 
+INFO:iMPACT - 0011 0111 0001 1000 0000 0000 0000 0000 
 INFO:iMPACT:579 - '1': Completed downloading bit file to device.
 INFO:iMPACT:188 - '1': Programming completed successfully.
  LCK_cycle = NoWait.
@@ -132,32 +313,4 @@ LCK cycle: NoWait
 INFO:iMPACT - '1': Checking done pin....done.
 '1': Programmed successfully.
 PROGRESS_END - End Operation.
-Elapsed time =      1 sec.
-Project: 'D:\Upb\Electronica Digital\TrabajosAula\Labo1\\auto_project.ipf'created.
-// *** BATCH CMD : setMode -bs
-// *** BATCH CMD : setMode -ss
-// *** BATCH CMD : setMode -sm
-// *** BATCH CMD : setMode -hw140
-// *** BATCH CMD : setMode -spi
-// *** BATCH CMD : setMode -acecf
-// *** BATCH CMD : setMode -acempm
-// *** BATCH CMD : setMode -pff
-// *** BATCH CMD : setMode -bs
-// *** BATCH CMD : saveProjectFile -file "D:\Upb\ElectronicaDigital\TrabajosAula\Labo1\\auto_project.ipf"
-// *** BATCH CMD : setMode -bs
-INFO:iMPACT - Launching WebTalk, please refer to the webtalk log at   D:\Upb\Electronica Digital\TrabajosAula\Labo1\webtalk.log for details.
-INFO:iMPACT - Running wbtc successfully.
-// *** BATCH CMD : setMode -bs
-// *** BATCH CMD : deleteDevice -position 1
-----------------------------------------------------------------------
-// *** BATCH CMD : deleteDevice -position 1
-----------------------------------------------------------------------
-// *** BATCH CMD : deleteDevice -position 1
-// *** BATCH CMD : setMode -bs
-// *** BATCH CMD : setMode -ss
-// *** BATCH CMD : setMode -sm
-// *** BATCH CMD : setMode -hw140
-// *** BATCH CMD : setMode -spi
-// *** BATCH CMD : setMode -acecf
-// *** BATCH CMD : setMode -acempm
-// *** BATCH CMD : setMode -pff
+Elapsed time =      0 sec.

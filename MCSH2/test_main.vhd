@@ -41,14 +41,16 @@ ARCHITECTURE behavior OF test_main IS
  
     COMPONENT main
     PORT(
-         CLK : IN  std_logic
+         CLK : IN  std_logic;
+			REGISTER_A : out std_logic_vector (7 downto 0)
         );
     END COMPONENT;
     
 
    --Inputs
    signal CLK : std_logic := '0';
-
+	
+	signal REGISTER_A : std_logic_vector (7 downto 0);
    -- Clock period definitions
    constant CLK_period : time := 10 ns;
  
@@ -56,7 +58,8 @@ BEGIN
  
 	-- Instantiate the Unit Under Test (UUT)
    uut: main PORT MAP (
-          CLK => CLK
+          CLK => CLK,
+			 REGISTER_A => REGISTER_A
         );
 
    -- Clock process definitions
@@ -72,14 +75,8 @@ BEGIN
    -- Stimulus process
    stim_proc: process
    begin		
-      -- hold reset state for 100 ns.
-      wait for 100 ns;	
+      wait for CLK_period*100;
 
-      wait for CLK_period*10;
-
-      -- insert stimulus here 
-
-      wait;
    end process;
 
 END;

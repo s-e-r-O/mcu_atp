@@ -36,7 +36,9 @@ entity CPU is
 		WRITE_RAM : out STD_LOGIC;
 		DATA : in STD_LOGIC_VECTOR(7 downto 0);
 		DATA_OUT : out STD_LOGIC_VECTOR(7 downto 0);
-		CLK : in STD_LOGIC
+		CLK : in STD_LOGIC;
+		RESET : in STD_LOGIC;
+		REGISTER_A : out STD_LOGIC_VECTOR(7 downto 0)
 	);
 end CPU;
 
@@ -47,7 +49,7 @@ constant DATA_SIZE : integer := 8;
 constant INSTR_SIZE : integer := 24;
 
 signal PC, MAR : STD_LOGIC_VECTOR(ADDR_SIZE - 1 downto 0) := (others => '0');
-signal AC, MBR : STD_LOGIC_VECTOR(DATA_SIZE - 1 downto 0) := (others => '0');
+signal MBR : STD_LOGIC_VECTOR(DATA_SIZE - 1 downto 0) := (others => '0');
 signal IR : STD_LOGIC_VECTOR(INSTR_SIZE - 1 downto 0) := (others => '0');
 
 type arr_of_arr is array(7 downto 0) of STD_LOGIC_VECTOR(DATA_SIZE - 1 downto 0);
@@ -61,6 +63,7 @@ begin
 
 ADDRESS <= MAR;
 DATA_OUT <= MBR;
+REGISTER_A <= REGISTERS(0);
 
 process (clk, DATA) 
 variable pc_int : integer;
@@ -68,8 +71,17 @@ variable instr_offset : integer := 0;
 variable instr_length : integer := 0;
 variable cur_state : integer := 0;
 begin
-	
-	if (clk'event and clk='1') then
+	if (RESET = '1') then
+		PC <= (others => '0');
+		MAR <= (others => '0');
+		MBR <= (others => '0');
+		IR <= (others => '0');
+		REGISTERS <= (others => (others => '0'));
+		state <= 0;
+		instr_offset := 0;
+		instr_length := 0;
+		cur_state := 0;
+	elsif (clk'event and clk='1') then
 		case state is 
 			when 0 =>
 				MAR <= PC;
@@ -80,7 +92,7 @@ begin
 				state <= 2;
 			when 2 => 
 				MBR <= DATA;
-				READ_RAM <= '0';
+				READ_RAM <= '1';
 				state <= cur_state;
 			
 			when 3 => 
@@ -313,10 +325,7 @@ begin
 						end if;
 						state <= 0;
 					end if;
-				end if;
-			
-				
-			
+				end if;		
 				
 			when 8 =>				--HLT
 				 state<= 8;	

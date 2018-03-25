@@ -4,13 +4,7 @@ y: 3
 cs: 123	
 ; Also labels for crazy jumps
 start:
-	MOV A, x
-	
-	MOV B, y
-	ADD A,B
-	MOV C, 129
-	ADD B, C
-	ADD A, B
-	SUB A, 22
-	JMP start
+	MOV A, y
+	MOV [200], 248
+	MOV A, [200]
 	HLT
