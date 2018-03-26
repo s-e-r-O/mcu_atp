@@ -36,7 +36,10 @@ entity main is
 		E: inout std_logic;
 		RS,RW,SF_CE0 : out std_logic;
 		DB : out std_logic_vector(3 downto 0);
-		REGISTER_A : out STD_LOGIC_VECTOR(7 downto 0)
+		LEDS: out STD_LOGIC_VECTOR(7 downto 0);
+		RX: in STD_LOGIC;
+		TX: out STD_LOGIC;
+		loading : in STD_LOGIC
 	);
 end main;
 
@@ -54,8 +57,7 @@ component CPU is
 		E: inout std_logic;
 		RS,RW,SF_CE0 : out std_logic;
 		DB : out std_logic_vector(3 downto 0);
-		REGISTER_A : out STD_LOGIC_VECTOR(7 downto 0)
-		
+		LOADING : in STD_LOGIC
 	);
 end component;
 
@@ -69,14 +71,28 @@ component ram is
 	);
 end component;
 
+
+component uart is
+    port (clk   : in std_logic;
+          reset : in std_logic;
+          rx    : in std_logic;
+          tx : out std_logic;
+			 data : out STD_LOGIC_VECTOR(7 downto 0));
+end component;
+
 signal mem_bus : STD_LOGIC_VECTOR(7 downto 0);
 signal data_bus_in_ram : STD_LOGIC_VECTOR(7 downto 0);
 signal data_bus_out_ram : STD_LOGIC_VECTOR(7 downto 0);
 signal read_ram : STD_LOGIC;
 signal write_ram : STD_LOGIC;
+signal data_from_uart : STD_LOGIC_VECTOR(7 downto 0);
 
 begin
-u1: CPU port map (mem_bus, read_ram, write_ram, data_bus_out_ram, data_bus_in_ram, CLK, RESET, E, RS, RW, SF_CE0, DB, REGISTER_A);
+LEDS <=	data_bus_in_ram when loading = '0' else
+			data_from_uart;
+
+u1: CPU port map (mem_bus, read_ram, write_ram, data_bus_out_ram, data_bus_in_ram, CLK, RESET, E, RS, RW, SF_CE0, DB, loading);
 u2: ram port map (mem_bus, data_bus_in_ram, read_ram, write_ram, CLK, data_bus_out_ram);
+u3: uart port map(CLK, RESET, RX, TX, data_from_uart);
 
 end Behavioral;

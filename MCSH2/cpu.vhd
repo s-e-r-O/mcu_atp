@@ -41,7 +41,7 @@ entity CPU is
 		E: inout std_logic;
 		RS,RW,SF_CE0 : out std_logic;
 		DB : out std_logic_vector(3 downto 0);
-		REGISTER_A : out STD_LOGIC_VECTOR(7 downto 0)
+		LOADING : in STD_LOGIC
 	);
 end CPU;
 
@@ -72,14 +72,13 @@ begin
 
 ADDRESS <= MAR;
 DATA_OUT <= MBR;
-REGISTER_A <= REGISTERS(0);
 SF_CE0 <='1';
 process (clk, DATA) 
 variable pc_int : integer;
 variable instr_offset : integer := 0;
 variable instr_length : integer := 0;
 variable cur_state : integer := 0;
-begin
+begin 
 	if (RESET = '1') then
 		PC <= (others => '0');
 		MAR <= (others => '0');
@@ -93,7 +92,7 @@ begin
 		carry <= '0';
 		zero <= '0';
 		print_init <= '0';
-	elsif (clk'event and clk='1') then
+	elsif (clk'event and clk='1' and loading='0') then
 		case state is 
 			when 0 =>
 				MAR <= PC;
