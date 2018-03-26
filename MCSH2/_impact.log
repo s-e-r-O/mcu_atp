@@ -1,9 +1,11 @@
 iMPACT Version: 14.7
 
-iMPACT log file Started on Mon Mar 26 04:56:20 2018
+iMPACT log file Started on Mon Mar 26 19:37:57 2018
 
 Welcome to iMPACT
 iMPACT Version: 14.7
+Project: 'C:\Users\i3\Google Drive\UPB\6_Sexto Semestre\ElectronicaDigital\XilinxProjects\labo1\\auto_project.ipf' already exists.
+Original project has been renamed to 'C:\Users\i3\Google Drive\UPB\6_SextoSemestre\Electronica Digital\XilinxProjects\labo1\\auto_project_1.ipf'.
 Project: C:\Users\i3\Google Drive\UPB\6_Sexto Semestre\ElectronicaDigital\XilinxProjects\labo1\\auto_project.ipf created.
 // *** BATCH CMD : setMode -bs
 GUI --- Auto connect to cable...
@@ -26,9 +28,11 @@ Type = 0x0004.
  Cable Type = 3, Revision = 0.
  Setting cable speed to 6 MHz.
 Cable connection established.
-Firmware version = 1303.
+Firmware version = 1029.
 File version of C:/Xilinx/14.7/ISE_DS/ISE/data/xusb_xlp.hex = 1303.
 Firmware hex file version = 1303.
+Downloading C:/Xilinx/14.7/ISE_DS/ISE/data/xusb_xlp.hex.
+Downloaded firmware version = 1303.
 PLD file version = 0012h.
  PLD version = 0012h.
 PROGRESS_END - End Operation.
@@ -36,7 +40,7 @@ Elapsed time =      1 sec.
 Type = 0x0004.
  ESN device is not available for this cable.
 Attempting to identify devices in the boundary-scan chain configuration...
-INFO:iMPACT - Current time: 26/03/2018 4:56:26
+INFO:iMPACT - Current time: 26/03/2018 19:38:02
 // *** BATCH CMD : Identify -inferir 
 PROGRESS_START - Starting Operation.
 Identifying chain contents...'0': : Manufacturer's ID = Xilinx xc2c64a, Version : 0
@@ -56,7 +60,7 @@ INFO:iMPACT:501 - '1': Added Device xc3s500e successfully.
 ----------------------------------------------------------------------
 done.
 PROGRESS_END - End Operation.
-Elapsed time =      2 sec.
+Elapsed time =      1 sec.
 // *** BATCH CMD : identifyMPM 
 // *** BATCH CMD : assignFile -p 1 -file "C:/Users/i3/Google Drive/UPB/7_SeptimoSemestre/mcu_atp/MCSH2/main.bit"
 '1': Loading file 'C:/Users/i3/Google Drive/UPB/7_SeptimoSemestre/mcu_atp/MCSH2/main.bit' ...
@@ -67,13 +71,13 @@ UserID read from the bitstream file = 0xFFFFFFFF.
 ----------------------------------------------------------------------
 INFO:iMPACT:501 - '1': Added Device xc3s500e successfully.
 ----------------------------------------------------------------------
-INFO:iMPACT - Current time: 26/03/2018 4:56:53
+INFO:iMPACT - Current time: 26/03/2018 19:38:26
 // *** BATCH CMD : Program -p 1 
 Maximum TCK operating frequency for this device chain: 10000000.
 Validating chain...
 Boundary-scan chain validated successfully.
-'1': Programming device...
 PROGRESS_START - Starting Operation.
+'1': Programming device...
  LCK_cycle = NoWait.
 LCK cycle: NoWait
 done.
@@ -86,4 +90,4 @@ LCK cycle: NoWait
 INFO:iMPACT - '1': Checking done pin....done.
 '1': Programmed successfully.
 PROGRESS_END - End Operation.
-Elapsed time =      1 sec.
+Elapsed time =      0 sec.

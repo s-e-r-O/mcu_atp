@@ -1,18 +1,52 @@
-;MULTIPLICACIÓN DE A * B
-;numA: 3 ; Variable
-;numB: 20
-;start:
-;	MOV A, 0   
-;	MOV B, numB
-;	MOV C, numA
-;multi:
-;	CMP C,0
-;	JZ end
-;	SUB C,1
-;	ADD A,B
-;	JMP multi
-;end: 
-i:3
-;	PRINT A
-;	HLT        ; Stop execution
-PRINT [i]
+; POTENCIA DE A^B
+numA: 2 ; Variable
+numB: 3
+numC: 2
+ 
+
+start:
+
+MOV A, 0
+MOV B, numB
+MOV C, numC
+
+multi_1:
+
+CMP C, 0
+JZ next_1
+SUB C,1
+ADD A,B
+JMP multi_1
+
+next_1:
+
+MOV D, 1   
+MOV B, numA
+MOV C, A
+
+pot:
+
+CMP C,0
+JZ end
+
+MOV E, 0
+MOV F, numA
+
+multi_2:
+CMP F,0
+JZ next_2
+ADD E,D
+SUB F,1
+JMP multi_2
+
+next_2:
+MOV D,E
+SUB C,1
+
+JMP pot
+
+end:
+
+PRINT D
+
+HLT        ; Stop execution
