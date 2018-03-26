@@ -6,7 +6,7 @@ from pprint import pprint
 reg_pattern = re.compile(r'^[A-H]$')
 val_pattern = re.compile(r'^[0-9]+|\w+$')
 areg_pattern = re.compile(r'^\[[A-H]\]$')
-aval_pattern = re.compile(r'^\[[0-9]+\]$')
+aval_pattern = re.compile(r'^\[([0-9]+|\w+)\]$')
 
 separator_pattern = re.compile(r'\s*,\s*|\s+\n?')
 label_pattern = re.compile(r'^(\s)*(?![A-H|a-h]\W|[0-9]+)(\w+)(\s)*:')
@@ -31,7 +31,7 @@ def recognizeAddress(address):
 		if (value == None):
 			return 'na',0
 		return 'val', value
-	elif areg_pattern.match(address):
+	elif areg_pattern.match(address):	
 		value = config['reg'][address[1]]
 		return 'areg',value
 	elif aval_pattern.match(address):
@@ -49,17 +49,19 @@ def getValue(address):
 			value=variables[address]
 		else:
 			print('(' + str(num_line) + '): '+address+' doesn\'t exist')
-			close()
+			close(False)
 
 	if value < 256:
 		return value
 	return None
 
-def close():
+def close(keepExec):
 	src.close()
 	raw.close()
-	sys.exit()
+	if not keepExec:
+		sys.exit()
 
+#Find all variables
 for line in src:
 
 	num_line+= 1
@@ -77,8 +79,34 @@ for line in src:
 		# Can't have numeric labels or a register value as a label
 		if (re.match(r'(\s)*([A-H|a-h]|[0-9]+)(\s)*:', line)):
 			print('(' + str(num_line) + '): Label not supported')
-			close()
+			close(False)
 
+	line = list(filter(None,separator_pattern.split(line.partition(';')[0].upper())))
+	found = False
+	if line == []:
+		continue
+	for cur_command in config['commands']:
+		if cur_command['id'] == line[0]:
+			cmd = cur_command
+			found = True
+			break
+	
+	if not found:
+		print('(' + str(num_line) + '):Command not found')
+		close(False)
+	num_instruction += cmd['length']
+src.seek(0)	
+for line in src:
+
+	num_line+= 1
+
+	# Check for labels
+	if label_pattern.match(line):
+		if (re.match(r'^(\s)*[0-9]+',line.partition(':')[2])):
+			# If label value is numeric
+			continue
+		line = line.partition(':')[2]
+	
 	line = list(filter(None,separator_pattern.split(line.partition(';')[0].upper())))
 	found = False
 	if line == []:
@@ -92,32 +120,32 @@ for line in src:
 	
 	if not found:
 		print('(' + str(num_line) + '):Command not found')
-		close()
+		close(False)
 	num_instruction += cmd['length']
 	if cmd['length'] == 1:
 		if len(line) != 1:
 			print('(' + str(num_line) + '):Not permitted')
-			close()
+			close(False)
 		
 		byteData = bytearray([cmd['value']])
 		raw.write(byteData)
 	elif cmd['length'] == 2: 
 		if len(line) != 2:
 			print('(' + str(num_line) + '):Not permitted')
-			close()
+			close(False)
 		
 		dir_id,value = recognizeAddress(line[1])
 		
 		if not dir_id in cmd['dir']:
 			print ('(' + str(num_line) + '):Not permitted')
-			close()
+			close(False)
 		
 		byteData = bytearray([(cmd['dir'][dir_id] << 5) + cmd['value'], value])
 		raw.write(byteData)
 	else:
 		if len(line) != 3:
 			print('(' + str(num_line) + '):Not permitted')
-			close()
+			close(False)
 
 		dir_id1,value1 = recognizeAddress(line[1])
 		dir_id2,value2 = recognizeAddress(line[2])
@@ -125,9 +153,21 @@ for line in src:
 
 		if not dir_id in cmd['dir']:
 			print ('(' + str(num_line) + '):Not permitted')
-			close()
+			close(False)
 		
 		byteData = bytearray([(cmd['dir'][dir_id] << 5) + cmd['value'], value1, value2])
 		raw.write(byteData)
 print('Variables: ' + str(variables.items()))
-close()
+close(True)
+
+vhdl = open('source.vhdl', 'w')
+
+with open('source.bin', 'rb') as f:
+    byte = f.read(1)
+    reg_number = 0
+    while byte:
+        # Do stuff with byte.
+        vhdl.write("\t" + str(reg_number) + " => X\"" + byte.hex() + "\",\n")
+        reg_number += 1
+        byte = f.read(1)
+vhdl.close();

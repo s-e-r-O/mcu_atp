@@ -72,8 +72,7 @@ begin
 
 ADDRESS <= MAR;
 DATA_OUT <= MBR;
-REGISTER_A(7) <= print_init;
-REGISTER_A(0) <= print_done;
+REGISTER_A <= REGISTERS(0);
 SF_CE0 <='1';
 process (clk, DATA) 
 variable pc_int : integer;
@@ -91,6 +90,8 @@ begin
 		instr_offset := 0;
 		instr_length := 0;
 		cur_state := 0;
+		carry <= '0';
+		zero <= '0';
 		print_init <= '0';
 	elsif (clk'event and clk='1') then
 		case state is 
@@ -103,7 +104,7 @@ begin
 				state <= 2;
 			when 2 => 
 				MBR <= DATA;
-				READ_RAM <= '1';
+				READ_RAM <= '0';
 				state <= cur_state;
 			
 			when 3 => 
@@ -145,6 +146,18 @@ begin
 					instr_length := 2;
 				elsif (IR(INSTR_SIZE - 4 downto INSTR_SIZE - ADDR_SIZE) = "01001" ) then
 					instr_length := 3;
+				elsif (IR(INSTR_SIZE - 4 downto INSTR_SIZE - ADDR_SIZE) = "01101" ) then
+					instr_length := 2;
+				elsif (IR(INSTR_SIZE - 4 downto INSTR_SIZE - ADDR_SIZE) = "01110" ) then
+					instr_length := 2;
+				elsif (IR(INSTR_SIZE - 4 downto INSTR_SIZE - ADDR_SIZE) = "01111" ) then
+					instr_length := 2;
+				elsif (IR(INSTR_SIZE - 4 downto INSTR_SIZE - ADDR_SIZE) = "10000" ) then
+					instr_length := 2;
+				elsif (IR(INSTR_SIZE - 4 downto INSTR_SIZE - ADDR_SIZE) = "10001" ) then
+					instr_length := 2;
+				elsif (IR(INSTR_SIZE - 4 downto INSTR_SIZE - ADDR_SIZE) = "10010" ) then
+					instr_length := 2;
 				end if;
 				
 				if (instr_offset = instr_length	) then
@@ -254,8 +267,7 @@ begin
 					elsif (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "011") then
 							REGISTERS(to_integer(unsigned(IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE))))<= REGISTERS(to_integer(unsigned(IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE)))) AND REGISTERS(to_integer(unsigned(IR(ADDR_SIZE-1 downto 0))));
 							state <= 0;
-					end if;
-					
+					end if;					
 				elsif (IR(INSTR_SIZE - 4 downto INSTR_SIZE - ADDR_SIZE) = "00101" ) then --OR
 					if (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "000") then
 							REGISTERS(to_integer(unsigned(IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE))))<= REGISTERS(to_integer(unsigned(IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE)))) OR REGISTERS(to_integer(unsigned(IR(ADDR_SIZE-1 downto 0))));
@@ -296,8 +308,6 @@ begin
 							PC<=IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE);
 							state <= 0;
 					end if;
-					
-					
 				elsif (IR(INSTR_SIZE - 4 downto INSTR_SIZE - ADDR_SIZE) = "01000" ) then --PRINT
 					print_init <= '1';
 					if (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "000") then
@@ -331,7 +341,7 @@ begin
 						end if;
 						state <= 0;
 					elsif (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "001") then
-						MAR <= IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE);
+						MAR <= IR(ADDR_SIZE-1 downto 0);
 						READ_RAM <= '1';
 						cur_state := 15;
 						state <= 1;
@@ -353,6 +363,139 @@ begin
 						end if;
 						state <= 0;
 					end if;
+				elsif (IR(INSTR_SIZE - 4 downto INSTR_SIZE - ADDR_SIZE) = "01101" ) then --JZ
+					if (zero = '1') then
+						if (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "000") then
+								PC<=REGISTERS(to_integer(unsigned(IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE))));
+								state <= 0;
+						elsif (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "001") then
+								MAR <= IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE);
+								READ_RAM <= '1';
+								cur_state := 14;
+								state <= 1;
+						elsif (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "010") then
+								MAR <= REGISTERS(to_integer(unsigned(IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE))));
+								READ_RAM <= '1';
+								cur_state := 14;
+								state <= 1;
+						elsif (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "011") then
+								PC<=IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE);
+								state <= 0;
+						end if;
+					else
+						state <= 0;
+					end if;
+				elsif (IR(INSTR_SIZE - 4 downto INSTR_SIZE - ADDR_SIZE) = "01110" ) then --JNZ
+					if (zero = '0') then
+						if (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "000") then
+								PC<=REGISTERS(to_integer(unsigned(IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE))));
+								state <= 0;
+						elsif (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "001") then
+								MAR <= IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE);
+								READ_RAM <= '1';
+								cur_state := 14;
+								state <= 1;
+						elsif (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "010") then
+								MAR <= REGISTERS(to_integer(unsigned(IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE))));
+								READ_RAM <= '1';
+								cur_state := 14;
+								state <= 1;
+						elsif (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "011") then
+								PC<=IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE);
+								state <= 0;
+						end if;
+					else
+						state <= 0;
+					end if;
+				elsif (IR(INSTR_SIZE - 4 downto INSTR_SIZE - ADDR_SIZE) = "01111" ) then --JA
+					if (carry = '1') then
+						if (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "000") then
+								PC<=REGISTERS(to_integer(unsigned(IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE))));
+								state <= 0;
+						elsif (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "001") then
+								MAR <= IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE);
+								READ_RAM <= '1';
+								cur_state := 14;
+								state <= 1;
+						elsif (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "010") then
+								MAR <= REGISTERS(to_integer(unsigned(IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE))));
+								READ_RAM <= '1';
+								cur_state := 14;
+								state <= 1;
+						elsif (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "011") then
+								PC<=IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE);
+								state <= 0;
+						end if;
+					else
+						state <= 0;
+					end if;
+				elsif (IR(INSTR_SIZE - 4 downto INSTR_SIZE - ADDR_SIZE) = "10000" ) then --JAE
+					if (zero = '1' or carry = '1') then
+						if (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "000") then
+								PC<=REGISTERS(to_integer(unsigned(IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE))));
+								state <= 0;
+						elsif (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "001") then
+								MAR <= IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE);
+								READ_RAM <= '1';
+								cur_state := 14;
+								state <= 1;
+						elsif (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "010") then
+								MAR <= REGISTERS(to_integer(unsigned(IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE))));
+								READ_RAM <= '1';
+								cur_state := 14;
+								state <= 1;
+						elsif (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "011") then
+								PC<=IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE);
+								state <= 0;
+						end if;
+					else
+						state <= 0;
+					end if;
+				elsif (IR(INSTR_SIZE - 4 downto INSTR_SIZE - ADDR_SIZE) = "10001" ) then --JB
+					if (carry = '0') then
+						if (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "000") then
+								PC<=REGISTERS(to_integer(unsigned(IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE))));
+								state <= 0;
+						elsif (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "001") then
+								MAR <= IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE);
+								READ_RAM <= '1';
+								cur_state := 14;
+								state <= 1;
+						elsif (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "010") then
+								MAR <= REGISTERS(to_integer(unsigned(IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE))));
+								READ_RAM <= '1';
+								cur_state := 14;
+								state <= 1;
+						elsif (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "011") then
+								PC<=IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE);
+								state <= 0;
+						end if;
+					else
+						state <= 0;
+					end if;
+				elsif (IR(INSTR_SIZE - 4 downto INSTR_SIZE - ADDR_SIZE) = "10010" ) then --JBE
+					if (zero = '1' or carry='0') then
+						if (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "000") then
+								PC<=REGISTERS(to_integer(unsigned(IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE))));
+								state <= 0;
+						elsif (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "001") then
+								MAR <= IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE);
+								READ_RAM <= '1';
+								cur_state := 14;
+								state <= 1;
+						elsif (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "010") then
+								MAR <= REGISTERS(to_integer(unsigned(IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE))));
+								READ_RAM <= '1';
+								cur_state := 14;
+								state <= 1;
+						elsif (IR(INSTR_SIZE - 1 downto INSTR_SIZE - 3) = "011") then
+								PC<=IR(INSTR_SIZE - ADDR_SIZE-1 downto ADDR_SIZE);
+								state <= 0;
+						end if;
+					else
+						state <= 0;
+					end if;
+					
 				end if;		
 				
 			when 8 =>				--HLT
@@ -502,7 +645,7 @@ begin
 					case num_digits is
 						when 3 =>
 							for I in 2 downto 1 loop
-								if (num > 100*I)then
+								if (num >= 100*I)then
 									cur_digit := I;
 									num := num - cur_digit * 100;
 									exit;
@@ -510,7 +653,7 @@ begin
 							end loop;
 						when 2 =>
 							for I in 9 downto 0 loop
-								if (num > 10*I)then
+								if (num >= 10*I)then
 									cur_digit := I;
 									num := num - cur_digit * 10;
 									exit;

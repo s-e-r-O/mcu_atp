@@ -2,7 +2,7 @@
 -- Company: 
 -- Engineer:
 --
--- Create Date:   09:05:22 03/23/2018
+-- Create Date:   00:46:52 03/26/2018
 -- Design Name:   
 -- Module Name:   C:/Users/i3/Google Drive/UPB/7_Septimo Semestre/mcu_atp/MCSH2/test_main.vhd
 -- Project Name:  MCSH2
@@ -42,15 +42,31 @@ ARCHITECTURE behavior OF test_main IS
     COMPONENT main
     PORT(
          CLK : IN  std_logic;
-			REGISTER_A : out std_logic_vector (7 downto 0)
+         RESET : IN  std_logic;
+         E : INOUT  std_logic;
+         RS : OUT  std_logic;
+         RW : OUT  std_logic;
+         SF_CE0 : OUT  std_logic;
+         DB : OUT  std_logic_vector(3 downto 0);
+         REGISTER_A : OUT  std_logic_vector(7 downto 0)
         );
     END COMPONENT;
     
 
    --Inputs
    signal CLK : std_logic := '0';
-	
-	signal REGISTER_A : std_logic_vector (7 downto 0);
+   signal RESET : std_logic := '0';
+
+	--BiDirs
+   signal E : std_logic;
+
+ 	--Outputs
+   signal RS : std_logic;
+   signal RW : std_logic;
+   signal SF_CE0 : std_logic;
+   signal DB : std_logic_vector(3 downto 0);
+   signal REGISTER_A : std_logic_vector(7 downto 0);
+
    -- Clock period definitions
    constant CLK_period : time := 10 ns;
  
@@ -59,7 +75,13 @@ BEGIN
 	-- Instantiate the Unit Under Test (UUT)
    uut: main PORT MAP (
           CLK => CLK,
-			 REGISTER_A => REGISTER_A
+          RESET => RESET,
+          E => E,
+          RS => RS,
+          RW => RW,
+          SF_CE0 => SF_CE0,
+          DB => DB,
+          REGISTER_A => REGISTER_A
         );
 
    -- Clock process definitions
@@ -76,7 +98,6 @@ BEGIN
    stim_proc: process
    begin		
       wait for CLK_period*100;
-
    end process;
 
 END;

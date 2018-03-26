@@ -1,8 +1,16 @@
-;Added declaration of variables !!
-x: 1
-y: 3
-cs: 123	
-; Also labels for crazy jumps
+;MULTIPLICACIÓN DE A * B
+numA: 3 ; Variable
+numB: 20
 start:
-	PRINT cs
-	HLT
+	MOV A, 0   
+	MOV B, numB
+	MOV C, numA
+multi:
+	CMP C,0
+	JZ end
+	SUB C,1
+	ADD A,B
+	JMP multi
+end: 
+	PRINT A
+	HLT        ; Stop execution
