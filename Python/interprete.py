@@ -1,7 +1,8 @@
 import json
 import re
 import sys
-from pprint import pprint
+import serial
+import time
 
 reg_pattern = re.compile(r'^[A-H]$')
 val_pattern = re.compile(r'^[0-9]+|\w+$')
@@ -61,6 +62,8 @@ def close(keepExec):
 	if not keepExec:
 		sys.exit()
 
+
+print('Finding all variables...')
 #Find all variables
 for line in src:
 
@@ -78,7 +81,7 @@ for line in src:
 	else:
 		# Can't have numeric labels or a register value as a label
 		if (re.match(r'(\s)*([A-H|a-h]|[0-9]+)(\s)*:', line)):
-			print('(' + str(num_line) + '): Label not supported')
+			print('\t(' + str(num_line) + '): Label not supported')
 			close(False)
 
 	line = list(filter(None,separator_pattern.split(line.partition(';')[0].upper())))
@@ -92,10 +95,14 @@ for line in src:
 			break
 	
 	if not found:
-		print('(' + str(num_line) + '):Command not found')
+		print('\t(' + str(num_line) + '):Command not found')
 		close(False)
 	num_instruction += cmd['length']
-src.seek(0)	
+for var in variables:
+	print('\t' + var + ":\t" + str(variables[var]))
+src.seek(0)
+num_line = 0
+print ('Generating .bin file...')	
 for line in src:
 
 	num_line+= 1
@@ -111,7 +118,7 @@ for line in src:
 	found = False
 	if line == []:
 		continue
-	print(repr(line))
+	print('\t'+repr(line))
 	for cur_command in config['commands']:
 		if cur_command['id'] == line[0]:
 			cmd = cur_command
@@ -119,32 +126,32 @@ for line in src:
 			break
 	
 	if not found:
-		print('(' + str(num_line) + '):Command not found')
+		print('\t(' + str(num_line) + '):Command not found')
 		close(False)
 	num_instruction += cmd['length']
 	if cmd['length'] == 1:
 		if len(line) != 1:
-			print('(' + str(num_line) + '):Not permitted')
+			print('\t(' + str(num_line) + '):Not permitted')
 			close(False)
 		
 		byteData = bytearray([cmd['value']])
 		raw.write(byteData)
 	elif cmd['length'] == 2: 
 		if len(line) != 2:
-			print('(' + str(num_line) + '):Not permitted')
+			print('\t(' + str(num_line) + '):Not permitted')
 			close(False)
 		
 		dir_id,value = recognizeAddress(line[1])
 		
 		if not dir_id in cmd['dir']:
-			print ('(' + str(num_line) + '):Not permitted')
+			print ('\t(' + str(num_line) + '):Not permitted')
 			close(False)
 		
 		byteData = bytearray([(cmd['dir'][dir_id] << 5) + cmd['value'], value])
 		raw.write(byteData)
 	else:
 		if len(line) != 3:
-			print('(' + str(num_line) + '):Not permitted')
+			print('\t(' + str(num_line) + '):Not permitted')
 			close(False)
 
 		dir_id1,value1 = recognizeAddress(line[1])
@@ -152,16 +159,16 @@ for line in src:
 		dir_id = dir_id1 + '-' + dir_id2
 
 		if not dir_id in cmd['dir']:
-			print ('(' + str(num_line) + '):Not permitted')
+			print ('\t(' + str(num_line) + '):Not permitted')
 			close(False)
 		
 		byteData = bytearray([(cmd['dir'][dir_id] << 5) + cmd['value'], value1, value2])
 		raw.write(byteData)
-print('Variables: ' + str(variables.items()))
 close(True)
 
-vhdl = open('source.vhdl', 'w')
 
+print('Generating .vhd file...')
+vhdl = open('source.vhd', 'w')
 with open('source.bin', 'rb') as f:
     byte = f.read(1)
     reg_number = 0
@@ -171,3 +178,16 @@ with open('source.bin', 'rb') as f:
         reg_number += 1
         byte = f.read(1)
 vhdl.close();
+print('\tNumber of registers written: ' + str(reg_number))
+
+print('Sending data through serial port')
+ser = serial.Serial('COM19', 115200, timeout=1)
+with open('source.bin', 'rb') as f:
+    byte = f.read(1)
+    reg_number = 0
+    while byte:
+        # Do stuff with byte.
+        ser.write(byte)
+        byte = f.read(1)
+        time.sleep(1)
+print('All done!')

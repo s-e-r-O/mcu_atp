@@ -1,16 +1,18 @@
 ;MULTIPLICACIÓN DE A * B
-numA: 3 ; Variable
-numB: 20
-start:
-	MOV A, 0   
-	MOV B, numB
-	MOV C, numA
-multi:
-	CMP C,0
-	JZ end
-	SUB C,1
-	ADD A,B
-	JMP multi
-end: 
-	PRINT A
-	HLT        ; Stop execution
+;numA: 3 ; Variable
+;numB: 20
+;start:
+;	MOV A, 0   
+;	MOV B, numB
+;	MOV C, numA
+;multi:
+;	CMP C,0
+;	JZ end
+;	SUB C,1
+;	ADD A,B
+;	JMP multi
+;end: 
+i:3
+;	PRINT A
+;	HLT        ; Stop execution
+PRINT [i]
